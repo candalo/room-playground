@@ -1,5 +1,6 @@
 package com.github.roomplayground.presentation
 
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -7,6 +8,7 @@ import com.github.roomplayground.MyApplication
 import com.github.roomplayground.R
 import com.github.roomplayground.data.di.DaggerNotesComponent
 import com.github.roomplayground.domain.Note
+import kotlinx.android.synthetic.main.activity_notes.fab_add_note as addNoteFab
 import kotlinx.android.synthetic.main.activity_notes.view_notes_empty as notesEmptyView
 import javax.inject.Inject
 
@@ -20,6 +22,7 @@ class NotesActivity : AppCompatActivity(), NotesView {
         setContentView(R.layout.activity_notes)
         injectDependencies()
         setupPresenter()
+        setupFabButton()
     }
 
     private fun injectDependencies() {
@@ -29,6 +32,14 @@ class NotesActivity : AppCompatActivity(), NotesView {
 
     private fun setupPresenter() {
         presenter.attachTo(this)
+    }
+
+    private fun setupFabButton() {
+        addNoteFab.setOnClickListener(fabButtonClickListener)
+    }
+
+    private val fabButtonClickListener = View.OnClickListener {
+        startActivity(Intent(this, AddNoteActivity::class.java))
     }
 
     override fun showEmptyNotesInfo() {
