@@ -14,7 +14,10 @@
     <EditText
         android:id="@+id/ed_note"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_margin="8dp"
-        android:backgroundTint="@android:color/transparent" />
+        android:background="@null"
+        android:fontFamily="casual"
+        android:gravity="top"
+        android:inputType="textNoSuggestions" />
 </LinearLayout>

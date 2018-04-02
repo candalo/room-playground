@@ -3,11 +3,13 @@ package com.github.roomplayground.presentation
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.widget.GridLayoutManager
 import android.view.View
 import com.github.roomplayground.MyApplication
 import com.github.roomplayground.R
 import com.github.roomplayground.data.di.DaggerNotesComponent
 import com.github.roomplayground.domain.Note
+import kotlinx.android.synthetic.main.activity_notes.rv_notes as notesRecyclerView
 import kotlinx.android.synthetic.main.activity_notes.fab_add_note as addNoteFab
 import kotlinx.android.synthetic.main.activity_notes.view_notes_empty as notesEmptyView
 import javax.inject.Inject
@@ -51,7 +53,11 @@ class NotesActivity : AppCompatActivity(), NotesView {
     }
 
     override fun showNotes(notes: List<Note>) {
-
+        notesRecyclerView.apply {
+            setHasFixedSize(true)
+            layoutManager = GridLayoutManager(this@NotesActivity, 2)
+            adapter = NotesAdapter(notes)
+        }
     }
 
     override fun openNote(note: Note) {
