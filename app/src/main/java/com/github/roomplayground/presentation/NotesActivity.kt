@@ -9,6 +9,7 @@ import com.github.roomplayground.MyApplication
 import com.github.roomplayground.R
 import com.github.roomplayground.data.di.DaggerNotesComponent
 import com.github.roomplayground.domain.Note
+import kotlinx.android.synthetic.main.toolbar.*
 import kotlinx.android.synthetic.main.activity_notes.rv_notes as notesRecyclerView
 import kotlinx.android.synthetic.main.activity_notes.fab_add_note as addNoteFab
 import kotlinx.android.synthetic.main.activity_notes.view_notes_empty as notesEmptyView
@@ -23,6 +24,7 @@ class NotesActivity : AppCompatActivity(), NotesView {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_notes)
         injectDependencies()
+        setupToolbar()
         setupPresenter()
         setupFabButton()
     }
@@ -30,6 +32,11 @@ class NotesActivity : AppCompatActivity(), NotesView {
     private fun injectDependencies() {
         val appComponent = (application as MyApplication).getAppComponent()
         DaggerNotesComponent.builder().appComponent(appComponent).build().inject(this)
+    }
+
+    private fun setupToolbar() {
+        setSupportActionBar(toolbar)
+        supportActionBar?.title = getString(R.string.notes)
     }
 
     private fun setupPresenter() {
