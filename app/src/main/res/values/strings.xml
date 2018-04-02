@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Room Playground</string>
+    <string name="empty_notes">You don\'t have notes yet</string>
 </resources>
