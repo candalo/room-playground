@@ -10,8 +10,13 @@ import com.github.roomplayground.domain.Note
 
 
 class NotesAdapter(
-        private val notes: List<Note>
+        private val notes: MutableList<Note>
 ) : RecyclerView.Adapter<NotesAdapter.NotesViewHolder>() {
+
+    fun addNote(note: Note) {
+        notes.add(note)
+        notifyDataSetChanged()
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NotesViewHolder {
         val inflater = LayoutInflater.from(parent.context)

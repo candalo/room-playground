@@ -1,5 +1,7 @@
 package com.github.roomplayground.presentation
 
+import android.app.Activity
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
@@ -10,6 +12,7 @@ import com.github.roomplayground.data.di.DaggerAddNoteComponent
 import com.github.roomplayground.domain.Note
 import kotlinx.android.synthetic.main.activity_add_note.ed_note as noteEditText
 import kotlinx.android.synthetic.main.toolbar.*
+import org.parceler.Parcels
 import javax.inject.Inject
 
 class AddNoteActivity : AppCompatActivity(), AddNoteView {
@@ -62,6 +65,9 @@ class AddNoteActivity : AppCompatActivity(), AddNoteView {
     }
 
     override fun onNoteSaved(note: Note) {
+        val intent = Intent()
+        intent.putExtra(Note::javaClass.name, Parcels.wrap(note))
+        setResult(Activity.RESULT_OK, intent)
         finish()
     }
 }

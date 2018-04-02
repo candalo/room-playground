@@ -1,5 +1,6 @@
 package com.github.roomplayground.presentation
 
+import android.app.Activity
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -10,12 +11,17 @@ import com.github.roomplayground.R
 import com.github.roomplayground.data.di.DaggerNotesComponent
 import com.github.roomplayground.domain.Note
 import kotlinx.android.synthetic.main.toolbar.*
+import org.parceler.Parcels
 import kotlinx.android.synthetic.main.activity_notes.rv_notes as notesRecyclerView
 import kotlinx.android.synthetic.main.activity_notes.fab_add_note as addNoteFab
 import kotlinx.android.synthetic.main.activity_notes.view_notes_empty as notesEmptyView
 import javax.inject.Inject
 
 class NotesActivity : AppCompatActivity(), NotesView {
+
+    companion object {
+        const val REQUEST_CODE = 100
+    }
 
     @Inject
     lateinit var presenter: NotesPresenter
@@ -48,7 +54,16 @@ class NotesActivity : AppCompatActivity(), NotesView {
     }
 
     private val fabButtonClickListener = View.OnClickListener {
-        startActivity(Intent(this, AddNoteActivity::class.java))
+        startActivityForResult(Intent(this, AddNoteActivity::class.java), REQUEST_CODE)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE) {
+            val adapter = notesRecyclerView.adapter as NotesAdapter
+            adapter.addNote(Parcels.unwrap(data?.getParcelableExtra(Note::javaClass.name)))
+        }
     }
 
     override fun showEmptyNotesInfo() {
@@ -63,7 +78,7 @@ class NotesActivity : AppCompatActivity(), NotesView {
         notesRecyclerView.apply {
             setHasFixedSize(true)
             layoutManager = GridLayoutManager(this@NotesActivity, 2)
-            adapter = NotesAdapter(notes)
+            adapter = NotesAdapter(notes.toMutableList())
         }
     }
 
