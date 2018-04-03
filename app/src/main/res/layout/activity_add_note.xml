@@ -18,6 +18,5 @@
         android:layout_margin="8dp"
         android:background="@null"
         android:fontFamily="casual"
-        android:gravity="top"
-        android:inputType="textNoSuggestions" />
+        android:gravity="top" />
 </LinearLayout>

@@ -29,6 +29,7 @@ class NotesAdapter(
     override fun onBindViewHolder(holder: NotesViewHolder, position: Int) {
         val note = notes[position]
         holder.noteTextView.text = note.text
+        holder.noteDateTextView.text = note.date
     }
 
     inner class NotesViewHolder(view: View) : RecyclerView.ViewHolder(view) {

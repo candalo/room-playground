@@ -61,8 +61,15 @@ class NotesActivity : AppCompatActivity(), NotesView {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE) {
-            val adapter = notesRecyclerView.adapter as NotesAdapter
-            adapter.addNote(Parcels.unwrap(data?.getParcelableExtra(Note::javaClass.name)))
+            var adapter = notesRecyclerView.adapter
+            val note = Parcels.unwrap<Note>(data?.getParcelableExtra(Note::javaClass.name))
+            if (adapter != null) {
+                adapter = notesRecyclerView.adapter as NotesAdapter
+                adapter.addNote(Parcels.unwrap(data?.getParcelableExtra(Note::javaClass.name)))
+            } else {
+                hideEmptyNotesInfo()
+                showNotes(arrayListOf(note))
+            }
         }
     }
 

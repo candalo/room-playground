@@ -3,6 +3,8 @@ package com.github.roomplayground.presentation
 import com.github.roomplayground.domain.Note
 import com.github.roomplayground.domain.UseCase
 import com.github.roomplayground.domain.UseCaseResult
+import com.github.roomplayground.util.DateUtil
+import java.util.Date
 
 
 class AddNotePresenterImpl(
@@ -16,7 +18,7 @@ class AddNotePresenterImpl(
     }
 
     override fun onSaveNoteOptionSelected(noteText: String) {
-        saveNoteUseCase.execute(Note(text = noteText), this)
+        saveNoteUseCase.execute(Note(text = noteText, date = DateUtil.getDateInFull(Date())), this)
     }
 
     override fun getUseCaseResult(result: Note) {

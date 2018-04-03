@@ -11,7 +11,6 @@ import org.parceler.ParcelConstructor
 data class Note @ParcelConstructor constructor(
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0,
-
-    @ColumnInfo(name = "text")
-    var text: String
+    var text: String,
+    var date: String
 )
