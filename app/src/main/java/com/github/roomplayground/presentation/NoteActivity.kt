@@ -8,29 +8,40 @@ import android.view.Menu
 import android.view.MenuItem
 import com.github.roomplayground.MyApplication
 import com.github.roomplayground.R
-import com.github.roomplayground.data.di.DaggerAddNoteComponent
+import com.github.roomplayground.data.di.DaggerNoteComponent
 import com.github.roomplayground.domain.Note
+import com.github.roomplayground.util.DateUtil
 import kotlinx.android.synthetic.main.activity_add_note.ed_note as noteEditText
 import kotlinx.android.synthetic.main.toolbar.*
 import org.parceler.Parcels
+import java.util.Date
 import javax.inject.Inject
 
-class AddNoteActivity : AppCompatActivity(), AddNoteView {
+class NoteActivity : AppCompatActivity(), NoteView {
 
     @Inject
-    lateinit var presenter: AddNotePresenter
+    lateinit var presenter: NotePresenter
+    private var note: Note? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_note)
+        note = getNote()
+        setupNote()
         injectDependencies()
         setupToolbar()
         setupPresenter()
     }
 
+    private fun getNote(): Note? = Parcels.unwrap(intent.getParcelableExtra(Note::javaClass.name))
+
+    private fun setupNote() {
+        noteEditText.setText(note?.text ?: "")
+    }
+
     private fun injectDependencies() {
         val appComponent = (application as MyApplication).getAppComponent()
-        DaggerAddNoteComponent.builder().appComponent(appComponent).build().inject(this)
+        DaggerNoteComponent.builder().appComponent(appComponent).build().inject(this)
     }
 
     private fun setupToolbar() {
@@ -57,12 +68,15 @@ class AddNoteActivity : AppCompatActivity(), AddNoteView {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when(item?.itemId) {
             R.id.action_save_note -> {
-                presenter.onSaveNoteOptionSelected(noteEditText.text.toString())
+                val note = Note(note?.id ?: 0, noteEditText.text.toString(), DateUtil.getDateInFull(Date()))
+                presenter.onSaveNoteOptionSelected(note, isUpdate())
                 return true
             }
         }
         return super.onOptionsItemSelected(item)
     }
+
+    private fun isUpdate(): Boolean = note != null
 
     override fun onNoteSaved(note: Note) {
         val intent = Intent()

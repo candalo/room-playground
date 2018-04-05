@@ -17,7 +17,7 @@ import kotlinx.android.synthetic.main.activity_notes.fab_add_note as addNoteFab
 import kotlinx.android.synthetic.main.activity_notes.view_notes_empty as notesEmptyView
 import javax.inject.Inject
 
-class NotesActivity : AppCompatActivity(), NotesView {
+class NotesActivity : AppCompatActivity(), NotesView, NotesAdapter.NoteActionListener {
 
     companion object {
         const val REQUEST_CODE = 100
@@ -54,7 +54,7 @@ class NotesActivity : AppCompatActivity(), NotesView {
     }
 
     private val fabButtonClickListener = View.OnClickListener {
-        startActivityForResult(Intent(this, AddNoteActivity::class.java), REQUEST_CODE)
+        startActivityForResult(Intent(this, NoteActivity::class.java), REQUEST_CODE)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -85,11 +85,17 @@ class NotesActivity : AppCompatActivity(), NotesView {
         notesRecyclerView.apply {
             setHasFixedSize(true)
             layoutManager = GridLayoutManager(this@NotesActivity, 2)
-            adapter = NotesAdapter(notes.toMutableList())
+            adapter = NotesAdapter(notes.toMutableList(), this@NotesActivity)
         }
     }
 
     override fun openNote(note: Note) {
+        val intent = Intent(this, NoteActivity::class.java)
+        intent.putExtra(Note::javaClass.name, Parcels.wrap(note))
+        startActivityForResult(intent, REQUEST_CODE)
+    }
 
+    override fun onNoteClicked(note: Note) {
+        presenter.onNoteSelected(note)
     }
 }
